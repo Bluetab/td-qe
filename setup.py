@@ -20,7 +20,7 @@ setup(
     author='bluetab',
     author_email='bluetab@bluetab.net',
     license='Apache2 License',
-    keywords=['td_qe', 'api', 'Qua'],
+    keywords=['td_qe', 'api', 'Quality Engine'],
     packages=find_packages(),
     test_suite='nose2.collector.collector',
     tests_require=[get_requirements(KEY_TEST)],
