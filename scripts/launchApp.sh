@@ -2,8 +2,7 @@
 
 SCRIPT=$0
 OPTION=$1
-PROJECT_PATH=/home/ec2-user/td_connector
-ORACLE_HOME=/truedat/oracle/instantclient_11_2
+PROJECT_PATH=/home/ec2-user/td_qe
 
 main(){
 
@@ -16,6 +15,10 @@ main(){
       start
       exit 0
       ;;
+    (foreground)
+      foreground
+      exit 0
+      ;;
     (status)
       status
       exit 0
@@ -26,31 +29,35 @@ main(){
       exit 0
       ;;
     (*)
-      echo "Usage: $SCRIPT {stop|start|restart|status}"
+      echo "Usage: $SCRIPT {stop|start|foreground|restart|status}"
       exit 2
       ;;
   esac
-
 }
 
 stop(){
   stringStatus=`status`
   if [[ ! -z ${stringStatus} ]]; then
-    kill -9 `ps aux | grep gunicorn | grep td_connector | awk '{ print $2 }'`
+    kill -9 `ps aux | grep gunicorn | grep td_qe | awk '{ print $2 }'`
   fi
 }
 
 start(){
   source ${PROJECT_PATH}/venv/bin/activate
   cd $PROJECT_PATH
-  export ORACLE_HOME=$ORACLE_HOME
-  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME
+  APP_ENV=Production gunicorn -c python:api.common.gunicorn wsgi --daemon
+  status
+}
+
+foreground(){
+  source ${PROJECT_PATH}/venv/bin/activate
+  cd $PROJECT_PATH
   APP_ENV=Production gunicorn -c python:api.common.gunicorn wsgi
   status
 }
 
 status(){
-  ps aux | grep gunicorn | grep td_connector
+  ps aux | grep gunicorn | grep td_qe
 }
 
 main
