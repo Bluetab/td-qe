@@ -1,20 +1,12 @@
 stages:
-  - build
   - test
   - deploy
   - pushToECR
 
-build:
-  stage: build
-  script:
-    - docker run --rm -v $(pwd):/code:ro -w /code --entrypoint=/code/ci/build.sh bluetab/amazonlinux-phoenix-postgresql:20180226093919
-  artifacts:
-    untracked: true
-
 test:
   stage: test
   script:
-    - docker run --rm -v $(pwd):/code:ro -w /code --entrypoint=/code/ci/test.sh bluetab/amazonlinux-phoenix-postgresql:20180226093919
+    - docker run --rm -v $(pwd):/code:ro -w /code --entrypoint=/code/ci/test.sh bluetab/amazonlinux-python3-neo4j:20180123125610087277324
   artifacts:
     untracked: true
 
@@ -29,7 +21,7 @@ deploy:
     - export VAULT_TOKEN=$(echo $VAULT_TOKEN | sed -e "s/\//\\\\\//g")
     - export API_USERNAME=$(echo $API_USERNAME | sed -e "s/\//\\\\\//g")
     - export API_PASSWORD=$(echo $API_PASSWORD | sed -e "s/\//\\\\\//g")
-    - docker run --rm -e API_USERNAME=$API_USERNAME -e API_PASSWORD=$API_PASSWORD -e VAULT_HOST=$VAULT_HOST -e VAULT_TOKEN=$VAULT_TOKEN -e PRODUCTION_HOST=$PRODUCTION_HOST -e PRODUCTION_USER=$PRODUCTION_USER -e PRODUCTION_PEM="$PRODUCTION_PEM" -e GUARDIAN_SECRET_KEY="$GUARDIAN_SECRET_KEY" -e USER=$USER -e TARGET_MIX_ENV=$TARGET_MIX_ENV -e BUILD_AT=$BUILD_AT -e TERM=$TERM -v $(pwd):/code:ro -w /code --entrypoint=/code/ci/deploy.sh bluetab/amazonlinux-phoenix-postgresql:20180226093919
+    - docker run --rm -e API_USERNAME=$API_USERNAME -e API_PASSWORD=$API_PASSWORD -e VAULT_HOST=$VAULT_HOST -e VAULT_TOKEN=$VAULT_TOKEN -e PRODUCTION_HOST=$PRODUCTION_HOST -e PRODUCTION_USER=$PRODUCTION_USER -e PRODUCTION_PEM="$PRODUCTION_PEM" -e GUARDIAN_SECRET_KEY="$GUARDIAN_SECRET_KEY" -e USER=$USER -e TARGET_MIX_ENV=$TARGET_MIX_ENV -e BUILD_AT=$BUILD_AT -e TERM=$TERM -v $(pwd):/code:ro -w /code --entrypoint=/code/ci/deploy.sh bluetab/amazonlinux-python3-neo4j:20180123125610087277324
   only:
     - master
 
