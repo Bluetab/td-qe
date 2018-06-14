@@ -1,13 +1,11 @@
-from api.common.utils import send_data_to_dq_results, writeDictToCSV
+from api.common.utils import send_data_to_dq_results, writeDictToCSV, abort
 from api.common.constants import (PATH_VAULT_SOURCES, NAME_FILE_TO_UPLOAD,
-                                  API_DATABASE_PATH, SPEC_RESULTSET_JSON_S3,
-                                  SPEC_VALUE_JSON_S3, CSV_EXTENSION,
-                                  SAVE_RESULTS)
-from flask import Blueprint, jsonify, request
+                                  API_DATABASE_PATH, SAVE_RESULTS,
+                                  CSV_EXTENSION)
 from api.v1.services.rules import Rules
+from flask import Blueprint, request
 from api.common.auth import auth
 from api.common import vault
-from glom import glom
 import importlib
 import datetime
 
@@ -31,8 +29,7 @@ def execute(business_concept_id):
             module = importlib.import_module(API_DATABASE_PATH + keys.pop("connection_type"))
             dbConnector = module.db_connector.DbConnector(**keys)
             dbConnector.connect()
-            query_id = dbConnector.start_query_execution(
-                   query, dbConnector.bucket)
+            query_id = dbConnector.execute(query)
             queries_ids_info.append((quality_rule, query_id, quality_control["name"]))
 
     array_results = []
@@ -41,14 +38,7 @@ def execute(business_concept_id):
                    'date', 'result']
 
     for quality_rule, query_id, quality_control_name in queries_ids_info:
-        target = dbConnector.get_query_results(query_id)
-        if target == "FAILED":
-            result = -1
-        else:
-            target = glom(target, SPEC_RESULTSET_JSON_S3)
-            target = glom(target, SPEC_VALUE_JSON_S3)
-            result = target[1][0]
-
+        result = dbConnector.get_results(query_id)
         array_results.append({"business_concept_id": business_concept_id,
                               "quality_control_name": quality_control_name,
                               "system": quality_rule["system"],
@@ -60,5 +50,7 @@ def execute(business_concept_id):
 
     path_save_results = SAVE_RESULTS + NAME_FILE_TO_UPLOAD + CSV_EXTENSION
     writeDictToCSV(path_save_results, csv_columns, array_results)
-    print(send_data_to_dq_results(path_save_results))
+    status_code = send_data_to_dq_results(path_save_results)
+    if status_code != 200:
+        return abort(422, {'message': "unprocessable entity"})
     return "", 204

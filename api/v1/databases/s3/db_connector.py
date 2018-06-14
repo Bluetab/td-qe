@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from api.common.constants import SPEC_RESULTSET_JSON_S3, SPEC_VALUE_JSON_S3
 from time import sleep
 from glom import glom
 import boto3
@@ -36,12 +37,16 @@ class DbConnector(object):
         self.__session = None
 
 
-    def start_query_execution(self, query, bucket):
+    def execute(self, query):
+        return self.__start_query_execution(query)
+
+
+    def __start_query_execution(self, query):
 
         query_id = self.__session.client(
             'athena').start_query_execution(
                 QueryString=query, ResultConfiguration=
-                {'OutputLocation': bucket})["QueryExecutionId"]
+                {'OutputLocation': self.bucket})["QueryExecutionId"]
 
         return query_id
 
@@ -54,7 +59,22 @@ class DbConnector(object):
         return glom(target, spec = 'QueryExecution.Status.State')
 
 
-    def get_query_results(self, query_id):
+    def get_results(self, query_id):
+
+        response = self.__get_query_results(query_id)
+
+        if response == "FAILED":
+            response = -1
+        else:
+            target = glom(response, SPEC_RESULTSET_JSON_S3)
+            target = glom(target, SPEC_VALUE_JSON_S3)
+            response = target[1][0]
+
+        return response
+
+
+
+    def __get_query_results(self, query_id):
 
         while True:
             result_query = self.__get_query_execution(query_id)

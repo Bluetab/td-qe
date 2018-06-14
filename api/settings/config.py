@@ -21,12 +21,14 @@ class Config(object):
     API_PASSWORD = "apipass"
 
 class ProductionConfig(Config):
-    APPLICATION_ROOT = '/home/ec2-user/td_connector'
+    APPLICATION_ROOT = '/home/ec2-user/td_qe'
     PORT = constants.PORT_PRO
     SWAGGER_ROOT = app.root_path.replace(APPLICATION_ROOT + "/", "")
     EXTERNAL_HOST = 'truedat.bluetab.net'
     EXTERNAL_PORT = 8009
     SWAGGER_HOST = "{}:{}".format(EXTERNAL_HOST, EXTERNAL_PORT)
+    API_USERNAME = "api-admin"
+    API_PASSWORD = "xxxxxx"
 
 
 class DevelopmentConfig(Config):

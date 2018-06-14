@@ -18,7 +18,6 @@ chmod -R 777 /working_code
 chgrp -R fabric /working_code
 
 echo "
-export NEO4J_PASSWORD=$NEO4J_PASSWORD
 export PRODUCTION_HOST=$PRODUCTION_HOST
 export PRODUCTION_USER=$PRODUCTION_USER
 export GUARDIAN_SECRET_KEY=$GUARDIAN_SECRET_KEY
