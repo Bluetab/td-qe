@@ -6,7 +6,8 @@ SPEC_RESULTSET_JSON_S3 = {'results': ('ResultSet.Rows', ['Data'])}
 SPEC_VALUE_JSON_S3 = ('results', [["VarCharValue"]])
 
 
-GET_QUALITY_RULES = "/api/quality_controls/concept/{id}"
+GET_QUALITY_CONTROLS_BY_BUSINESS_CONCEPT = "/api/quality_controls/concept/{id}"
+GET_QUALITY_CONTROLS = "/api/quality_controls"
 SEND_CSV_RESULTS = "/api/quality_controls_results"
 NAME_KEY_FILES_DQ = "quality_controls_results"
 
@@ -20,6 +21,11 @@ HEADERS_ACCEPT = { 'Accept': 'application/json' }
 
 PATH_VAULT_SOURCES = "meta-connect/sources/data/"
 API_DATABASE_PATH = "api.v1.databases."
+
+
+CSV_COLUMNS = ['business_concept_id','quality_control_name','system',
+               'group', 'structure_name', 'field_name',
+               'date', 'result']
 
 
 TYPE_MANDATORY_FIELD = "mandatory_field"
@@ -46,8 +52,52 @@ FROM {TABLE}
 WHERE {COLUMN} >= {MIN_VALUE}
 AND {COLUMN} <= {MAX_VALUE};"""
 
+QUERY_MIN_VALUE = """
+SELECT COUNT(*)*100/(SELECT COUNT(*)
+    FROM {TABLE})
+FROM {TABLE}
+WHERE {COLUMN} >= {MIN_VALUE};"""
+
+QUERY_MAX_VALUE = """
+SELECT COUNT(*)*100/(SELECT COUNT(*)
+    FROM {TABLE})
+FROM {TABLE}
+WHERE {COLUMN} <= {MAX_VALUE};"""
+
 QUERY_MANDATORY_FIELD = """
 SELECT COUNT(*)*100/(SELECT COUNT(*)
     FROM {TABLE})
 FROM {TABLE}
 WHERE {COLUMN} IS NOT NULL;"""
+
+QUERY_DATES_RANGE = """
+SELECT COUNT(*)*100/(SELECT COUNT(*)
+    FROM {TABLE})
+FROM {TABLE}
+WHERE {COLUMN}
+BETWEEN {COLUMN} '{MIN_DATE}'
+AND {COLUMN} '{MAX_DATE}';"""
+
+QUERY_MIN_DATE = """
+SELECT COUNT(*)*100/(SELECT COUNT(*)
+    FROM {TABLE})
+FROM {TABLE}
+WHERE {COLUMN} >= '{MIN_DATE}';"""
+
+QUERY_MAX_DATE = """
+SELECT COUNT(*)*100/(SELECT COUNT(*)
+    FROM {TABLE})
+FROM {TABLE}
+WHERE {COLUMN} >= '{MAX_DATE}';"""
+
+QUERY_MIN_TEXT = """
+SELECT COUNT(*)*100.0/(SELECT COUNT(*)
+    FROM {TABLE})
+FROM {TABLE}
+WHERE LENGTH({COLUMN}) >= {MIN_TEXT};"""
+
+QUERY_MAX_TEXT = """
+SELECT COUNT(*)*100.0/(SELECT COUNT(*)
+    FROM {TABLE})
+FROM {TABLE}
+WHERE LENGTH({COLUMN}) <= {MAX_TEXT};"""
