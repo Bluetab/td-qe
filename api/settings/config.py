@@ -13,7 +13,7 @@ class Config(object):
     JWT_AUD = 'tdauth'
     ALGORITHM = 'HS512'
     EXTERNAL_HOST = 'localhost'
-    EXTERNAL_PORT = 4010
+    EXTERNAL_PORT = 4009
     SWAGGER_HOST = "{}:{}".format(EXTERNAL_HOST, EXTERNAL_PORT)
     VAULT_HOST = "http://localhost:4008"
     VAULT_TOKEN = "5e437b1b-2b96-697a-ef34-ac04186c888c"
@@ -25,7 +25,7 @@ class ProductionConfig(Config):
     PORT = constants.PORT_PRO
     SWAGGER_ROOT = app.root_path.replace(APPLICATION_ROOT + "/", "")
     EXTERNAL_HOST = 'truedat.bluetab.net'
-    EXTERNAL_PORT = 8009
+    EXTERNAL_PORT = 8008
     SWAGGER_HOST = "{}:{}".format(EXTERNAL_HOST, EXTERNAL_PORT)
     API_USERNAME = "api-admin"
     API_PASSWORD = "xxxxxx"
