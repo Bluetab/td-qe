@@ -19,7 +19,7 @@ setup(
     description='Api for execute quality rules',
     author='bluetab',
     author_email='bluetab@bluetab.net',
-    license='Apache2 License',
+    license='GNU GENERAL PUBLIC LICENSE v3',
     keywords=['td_qe', 'api', 'Quality Engine'],
     packages=find_packages(),
     test_suite='nose2.collector.collector',
