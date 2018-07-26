@@ -29,6 +29,8 @@ def verify_auth_token(token):
         token = jwt.decode(token, app.config['SECRET_KEY'],
                            algorithms=app.config['ALGORITHM'],
                            audience=app.config['JWT_AUD'])
+        if(token.is_admin != True):
+            return None
     except jwt.ExpiredSignature:
         return None
     except jwt.DecodeError:
