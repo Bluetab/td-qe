@@ -1,17 +1,17 @@
-from fabric.api import (local, put, run, env, serial)
+from fabric.api import (local, put, run, env)
 
 # the user to use for the remote commands
 env.user = 'ec2-user'
 # the servers where the commands are executed
 env.hosts = ['truedat.bluetab.net']
 
-@serial
+
 def pack():
     # build the package
     local('pip install -e .', capture=False)
     local('python setup.py sdist --formats=gztar', capture=False)
 
-@serial
+
 def deploy():
     # figure out the package name and version
     dist = local('python setup.py --fullname', capture=True).strip()

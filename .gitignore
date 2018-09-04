@@ -5,6 +5,7 @@ params_pwc
 build_centos/env.conf
 log/
 results/
+env.conf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

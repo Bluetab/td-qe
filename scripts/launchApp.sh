@@ -3,6 +3,7 @@
 SCRIPT=$0
 OPTION=$1
 PROJECT_PATH=/home/ec2-user/td_qe
+ORACLE_HOME=/truedat/oracle/instantclient_11_2
 
 main(){
 
@@ -45,6 +46,8 @@ stop(){
 start(){
   source ${PROJECT_PATH}/venv/bin/activate
   cd $PROJECT_PATH
+  export ORACLE_HOME=$ORACLE_HOME
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME
   APP_ENV=Production gunicorn -c python:api.common.gunicorn wsgi --daemon
   status
 }
@@ -52,6 +55,8 @@ start(){
 foreground(){
   source ${PROJECT_PATH}/venv/bin/activate
   cd $PROJECT_PATH
+  export ORACLE_HOME=$ORACLE_HOME
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME
   APP_ENV=Production gunicorn -c python:api.common.gunicorn wsgi
   status
 }

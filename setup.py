@@ -5,6 +5,7 @@ KEY_COMMON="common"
 KEY_DEV="dev"
 KEY_TEST="test"
 FILE_REQUIREMENTS={KEY_COMMON : "requirements.txt",
+                   KEY_DEV: "requirements-dev.txt"
                    KEY_TEST : "requirements-test.txt"}
 
 REQUIREMENTS={}
@@ -25,5 +26,10 @@ setup(
     test_suite='nose2.collector.collector',
     tests_require=[get_requirements(KEY_TEST)],
     include_package_data=True,
-    install_requires=get_requirements(KEY_COMMON)
+    install_requires=get_requirements(KEY_COMMON),
+    extras_require={
+        'dev': [
+            get_requirements(KEY_DEV)
+        ]
+    }
 )
