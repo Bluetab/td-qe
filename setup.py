@@ -5,7 +5,7 @@ KEY_COMMON="common"
 KEY_DEV="dev"
 KEY_TEST="test"
 FILE_REQUIREMENTS={KEY_COMMON : "requirements.txt",
-                   KEY_DEV: "requirements-dev.txt"
+                   KEY_DEV: "requirements-dev.txt",
                    KEY_TEST : "requirements-test.txt"}
 
 REQUIREMENTS={}
