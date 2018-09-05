@@ -17,9 +17,6 @@ publish:
     - git branch -f master HEAD
     - export VERSION=$(cat version)
     - export PROJECT_NAME=${PWD##*/}
-    - export AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID | sed -e "s/\//\\\\\//g")
-    - export AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY | sed -e "s/\//\\\\\//g")
-    - export AWS_DEFAULT_REGION=$(echo $AWS_DEFAULT_REGION | sed -e "s/\//\\\\\//g")
     - docker build -t bluetab-truedat/$PROJECT_NAME:latest .
     - docker run --rm \
       -t $(tty &>/dev/null && echo "-i") \
