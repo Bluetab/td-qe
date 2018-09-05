@@ -14,6 +14,11 @@ class CustomValidationsModel(BaseModel, TimestampMixin, db.Model):
         return self.query.filter_by(quality_control_id=quality_control_id).first()
 
 
+    @classmethod
+    def find_by_custom_validation_id(self, custom_validation_id):
+        return self.query.filter_by(id=custom_validation_id).first()
+
+
     def to_dict(self):
         return {'id': self.id, 'quality_control_id': self.quality_control_id,
                 'query': self.query_validation}
