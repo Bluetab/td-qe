@@ -6,9 +6,9 @@ SPEC_RESULTSET_JSON_S3 = {'results': ('ResultSet.Rows', ['Data'])}
 SPEC_VALUE_JSON_S3 = ('results', [["VarCharValue"]])
 
 
-GET_QUALITY_CONTROLS_BY_BUSINESS_CONCEPT = "/api/quality_controls/concept/{id}"
-GET_QUALITY_CONTROLS = "/api/quality_controls"
-SEND_CSV_RESULTS = "/api/quality_controls_results"
+GET_QUALITY_CONTROLS_BY_BUSINESS_CONCEPT = "/api/rules/concept/{id}"
+GET_QUALITY_CONTROLS = "/api/rules"
+SEND_CSV_RESULTS = "/api/rule_results"
 NAME_KEY_FILES_DQ = "quality_controls_results"
 
 SAVE_RESULTS = "results/"
