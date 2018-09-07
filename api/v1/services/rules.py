@@ -19,7 +19,7 @@ class Rules(object):
 
     @staticmethod
     def parser_result_get_qc(data):
-        spec = [{'quality_rules': lambda t: t['quality_rules'] if t['status'] == 'implemented' else OMIT,
+        spec = [{'quality_rules': lambda t: t['rule_implementations'] if t['status'] == 'implemented' else OMIT,
                 'type_params': lambda t: t['type_params'] if t['status'] == 'implemented' else OMIT,
                 'name': lambda t: t['name'] if t['status'] == 'implemented' else OMIT,
                 'business_concept_id': lambda t: t['business_concept_id'] if t['status'] == 'implemented' else OMIT}]

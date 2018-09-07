@@ -11,7 +11,7 @@ import datetime
 rules = Blueprint('rules', __name__)
 
 
-@rules.route('/rules/execute', methods=['POST'])
+@rules.route('/engine/execute', methods=['POST'])
 @auth.login_required
 def all_rules():
 
@@ -22,7 +22,7 @@ def all_rules():
     return "", 204
 
 
-@rules.route('/rules/<int:business_concept_id>/execute', methods=['POST'])
+@rules.route('/engine/<int:business_concept_id>/execute', methods=['POST'])
 @auth.login_required
 def rules_by_id(business_concept_id):
 
@@ -46,6 +46,7 @@ def execute_rules_quality(data):
             quality_rule = Rules.parser_result_get_qr(quality_rule_raw)
             keys = vault.get_data_from_vault(constants.PATH_VAULT_SOURCES +
                                              quality_rule["system"])
+
             if keys != None:
                 query = Rules.get_query_by_type(quality_rule, quality_control["type_params"])
                 module = importlib.import_module(constants.API_DATABASE_PATH +

@@ -9,7 +9,7 @@ SPEC_VALUE_JSON_S3 = ('results', [["VarCharValue"]])
 GET_QUALITY_CONTROLS_BY_BUSINESS_CONCEPT = "/api/rules/concept/{id}"
 GET_QUALITY_CONTROLS = "/api/rules"
 SEND_CSV_RESULTS = "/api/rule_results"
-NAME_KEY_FILES_DQ = "quality_controls_results"
+NAME_KEY_FILES_DQ = "rule_results"
 
 SAVE_RESULTS = "results/"
 CSV_EXTENSION = ".csv"
