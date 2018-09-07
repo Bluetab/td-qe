@@ -13,16 +13,15 @@ app.config.from_object('api.settings.config.{}Config'.format(environ))
 
 db.init_app(app)
 
-
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 
-from api.v1.rules import rules
+from api.v1.engine import engine
 from api.v1.custom_validations import custom_validations
 
 API_V1 = '/api'
 
-app.register_blueprint(rules, url_prefix=API_V1)
+app.register_blueprint(engine, url_prefix=API_V1)
 app.register_blueprint(custom_validations, url_prefix=API_V1)

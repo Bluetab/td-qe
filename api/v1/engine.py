@@ -8,10 +8,9 @@ import importlib
 import datetime
 
 
-rules = Blueprint('rules', __name__)
+engine = Blueprint('engine', __name__)
 
-
-@rules.route('/engine/execute', methods=['POST'])
+@engine.route('/engine/execute', methods=['POST'])
 @auth.login_required
 def all_rules():
 
@@ -22,7 +21,7 @@ def all_rules():
     return "", 204
 
 
-@rules.route('/engine/<int:business_concept_id>/execute', methods=['POST'])
+@engine.route('/engine/<int:business_concept_id>/execute', methods=['POST'])
 @auth.login_required
 def rules_by_id(business_concept_id):
 
