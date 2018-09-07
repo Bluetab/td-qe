@@ -5,13 +5,13 @@ class CustomValidationsModel(BaseModel, TimestampMixin, db.Model):
 
     """Table of custom validations"""
     __tablename__ = 'custom_validations'
-    quality_control_id = db.Column(db.Integer)
+    rule_id = db.Column(db.Integer)
     query_validation = db.Column(db.Text)
 
 
     @classmethod
-    def find_by_quality_control_id(self, quality_control_id):
-        return self.query.filter_by(quality_control_id=quality_control_id).first()
+    def find_by_rule_id(self, rule_id):
+        return self.query.filter_by(rule_id=rule_id).first()
 
 
     @classmethod
@@ -20,5 +20,5 @@ class CustomValidationsModel(BaseModel, TimestampMixin, db.Model):
 
 
     def to_dict(self):
-        return {'id': self.id, 'quality_control_id': self.quality_control_id,
-                'query': self.query_validation}
+        return {'id': self.id, 'rule_id': self.rule_id,
+                'query_validation': self.query_validation}

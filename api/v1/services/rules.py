@@ -1,42 +1,40 @@
 # -*- coding: utf-8 -*-
-from api.common.utils import get_accept_auth_header, auth_token
-from api.common import constants
-from glom import glom, OMIT
 from api.app import app
+from api.common import constants
+from api.common.utils import get_accept_auth_header, auth_token
+from api.model.entities.custom_validations_model import CustomValidationsModel
+from glom import glom, OMIT
+ 
 import requests
 
 class Rules(object):
 
 
     @staticmethod
-    def get_data_from_dq(path_url, business_concept_id=None):
+    def get_data_from_dq(path_url, business_concept_id=None, status=None):
         response = requests.get(app.config["SERVICE_TD_DQ"] +
-                                path_url.format(id=business_concept_id),
+                                path_url.format(id=business_concept_id, status=status),
                                 headers=get_accept_auth_header(auth_token()))
         data = response.json()["data"]
         return data
 
 
     @staticmethod
-    def parser_result_get_qc(data):
-        spec = [{'quality_rules': lambda t: t['rule_implementations'] if t['status'] == 'implemented' else OMIT,
-                'type_params': lambda t: t['type_params'] if t['status'] == 'implemented' else OMIT,
-                'name': lambda t: t['name'] if t['status'] == 'implemented' else OMIT,
-                'business_concept_id': lambda t: t['business_concept_id'] if t['status'] == 'implemented' else OMIT}]
-        return list(filter(None, glom(data, spec)))
+    def parser_result_get_rules(data):
+        return list(filter(None, data))
 
 
     @staticmethod
-    def parser_result_get_qr(quality_rule_raw):
+    def parser_result_get_ri(rule_implementation_raw):
         spec = {"system": ("system"),
                 "table": ("system_params.table"),
                 "column": ("system_params.column"),
                 "type": ("type")}
-        return glom(quality_rule_raw, spec)
+        return glom(rule_implementation_raw, spec)
 
 
     @staticmethod
-    def get_query_by_type(quality_rule, type_params):
+    def get_query_by_type(rule_implementation, rule):
 
         switcher = {
             constants.TYPE_INTEGER_VALUES_RANGE: Rules.__query_integer_values_range,
@@ -47,82 +45,92 @@ class Rules(object):
             constants.TYPE_MAX_DATE: Rules.__query_max_date,
             constants.TYPE_MIN_TEXT: Rules.__query_min_text,
             constants.TYPE_MAX_TEXT: Rules.__query_max_text,
-            constants.TYPE_MANDATORY_FIELD: Rules.__query_mandatory_field
-            }
+            constants.TYPE_MANDATORY_FIELD: Rules.__query_mandatory_field,
+            constants.TYPE_CUSTOM: Rules.__query_custom_validation
+        }
 
 
         return switcher.get(
-            quality_rule["type"],
-            quality_rule["type"])(quality_rule, type_params)
+            rule_implementation["type"],
+            rule_implementation["type"])(rule_implementation, rule)
 
 
     @staticmethod
-    def __query_integer_values_range(quality_rule, type_params):
+    def __query_integer_values_range(rule_implementation, rule):
         return constants.QUERY_INTEGER_VALUES_RANGE.format(
-            TABLE=quality_rule["table"],
-            COLUMN=quality_rule["column"],
-            MIN_VALUE=type_params["min_value"],
-            MAX_VALUE=type_params["max_value"])
+            TABLE=rule_implementation["table"],
+            COLUMN=rule_implementation["column"],
+            MIN_VALUE=rule["type_params"]["min_value"],
+            MAX_VALUE=rule["type_params"]["max_value"])
 
     @staticmethod
-    def __query_min_value(quality_rule, type_params):
+    def __query_min_value(rule_implementation, rule):
         return constants.QUERY_MIN_VALUE.format(
-            TABLE=quality_rule["table"],
-            COLUMN=quality_rule["column"],
-            MIN_VALUE=type_params["min_value"])
+            TABLE=rule_implementation["table"],
+            COLUMN=rule_implementation["column"],
+            MIN_VALUE=rule["type_params"]["min_value"])
 
 
     @staticmethod
-    def __query_max_value(quality_rule, type_params):
+    def __query_max_value(rule_implementation, rule):
         return constants.QUERY_MAX_VALUE.format(
-            TABLE=quality_rule["table"],
-            COLUMN=quality_rule["column"],
-            MAX_VALUE=type_params["max_value"])
+            TABLE=rule_implementation["table"],
+            COLUMN=rule_implementation["column"],
+            MAX_VALUE=rule["type_params"]["max_value"])
 
 
     @staticmethod
-    def __query_dates_range(quality_rule, type_params):
+    def __query_dates_range(rule_implementation, rule):
         return constants.QUERY_DATES_RANGE.format(
-            TABLE=quality_rule["table"],
-            COLUMN=quality_rule["column"],
-            MIN_DATE=type_params["min_date"],
-            MAX_DATE=type_params["max_date"])
+            TABLE=rule_implementation["table"],
+            COLUMN=rule_implementation["column"],
+            MIN_DATE=rule["type_params"]["min_date"],
+            MAX_DATE=rule["type_params"]["max_date"])
 
 
     @staticmethod
-    def __query_min_date(quality_rule, type_params):
+    def __query_min_date(rule_implementation, rule):
         return constants.QUERY_MIN_VALUE.format(
-            TABLE=quality_rule["table"],
-            COLUMN=quality_rule["column"],
-            MIN_DATE=type_params["min_date"])
+            TABLE=rule_implementation["table"],
+            COLUMN=rule_implementation["column"],
+            MIN_DATE=rule["type_params"]["min_date"])
 
 
     @staticmethod
-    def __query_max_date(quality_rule, type_params):
+    def __query_max_date(rule_implementation, rule):
         return constants.QUERY_MAX_VALUE.format(
-            TABLE=quality_rule["table"],
-            COLUMN=quality_rule["column"],
-            MAX_DATE=type_params["max_date"])
+            TABLE=rule_implementation["table"],
+            COLUMN=rule_implementation["column"],
+            MAX_DATE=rule["type_params"]["max_date"])
 
 
     @staticmethod
-    def __query_min_text(quality_rule, type_params):
+    def __query_min_text(rule_implementation, rule):
         return constants.QUERY_MIN_TEXT.format(
-            TABLE=quality_rule["table"],
-            COLUMN=quality_rule["column"],
-            MIN_TEXT=type_params["num_characters"])
+            TABLE=rule_implementation["table"],
+            COLUMN=rule_implementation["column"],
+            MIN_TEXT=rule["type_params"]["num_characters"])
 
 
     @staticmethod
-    def __query_max_text(quality_rule, type_params):
+    def __query_max_text(rule_implementation, rule):
         return constants.QUERY_MAX_TEXT.format(
-            TABLE=quality_rule["table"],
-            COLUMN=quality_rule["column"],
-            MAX_TEXT=type_params["num_characters"])
+            TABLE=rule_implementation["table"],
+            COLUMN=rule_implementation["column"],
+            MAX_TEXT=rule["type_params"]["num_characters"])
 
 
     @staticmethod
-    def __query_mandatory_field(quality_rule, type_params):
+    def __query_mandatory_field(rule_implementation, rule):
         return constants.QUERY_MANDATORY_FIELD.format(
-            TABLE=quality_rule["table"],
-            COLUMN=quality_rule["column"])
+            TABLE=rule_implementation["table"],
+            COLUMN=rule_implementation["column"])
+
+
+    @staticmethod
+    def __query_custom_validation(rule_implementation=None, rule=None):
+        return CustomValidationsModel.find_by_rule_id(
+            rule["rule_id"]
+            )["query"]
+
+

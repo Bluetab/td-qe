@@ -14,7 +14,8 @@ engine = Blueprint('engine', __name__)
 @auth.login_required
 def all_rules():
 
-    data = Rules.get_data_from_dq(constants.GET_QUALITY_CONTROLS)
+    data = Rules.get_data_from_dq(constants.GET_RULES, 
+        status=constants.VALID_EXEC_STATUS)
     status_code = execute_rules_quality(data)
     if status_code != 200:
         return abort(422, {'message': "unprocessable entity"})
@@ -25,8 +26,11 @@ def all_rules():
 @auth.login_required
 def rules_by_id(business_concept_id):
 
-    data = Rules.get_data_from_dq(constants.GET_QUALITY_CONTROLS_BY_BUSINESS_CONCEPT,
-                                  business_concept_id)
+    data = Rules.get_data_from_dq(
+        constants.GET_RULES_BY_BUSINESS_CONCEPT,
+        business_concept_id, 
+        constants.VALID_EXEC_STATUS
+    )
 
     status_code = execute_rules_quality(data)
     if status_code != 200:
@@ -36,37 +40,37 @@ def rules_by_id(business_concept_id):
 
 def execute_rules_quality(data):
 
-    quality_controls = Rules.parser_result_get_qc(data)
+    rules = Rules.parser_result_get_rules(data)
 
     queries_ids_info = []
-    for quality_control in quality_controls:
-        quality_rules = quality_control["quality_rules"]
-        for quality_rule_raw in quality_rules:
-            quality_rule = Rules.parser_result_get_qr(quality_rule_raw)
+    for rule in rules:
+        rule_implementations = rule["rule_implementations"]
+        for rule_implementation_raw in rule_implementations:
+            rule_implementation = Rules.parser_result_get_ri(rule_implementation_raw)
             keys = vault.get_data_from_vault(constants.PATH_VAULT_SOURCES +
-                                             quality_rule["system"])
+                                             rule_implementation["system"])
 
             if keys != None:
-                query = Rules.get_query_by_type(quality_rule, quality_control["type_params"])
+                query = Rules.get_query_by_type(rule_implementation, rule)
                 module = importlib.import_module(constants.API_DATABASE_PATH +
                                                  keys.pop("connection_type"))
                 dbConnector = module.db_connector.DbConnector(**keys)
                 dbConnector.connect()
                 query_id = dbConnector.execute(query)
-                queries_ids_info.append((quality_rule, query_id,
-                                         quality_control["name"],
-                                         quality_control["business_concept_id"]))
+                queries_ids_info.append((rule_implementation, query_id,
+                                         rule["name"],
+                                         rule["business_concept_id"]))
 
 
     array_results = []
-    for quality_rule, query_id, quality_control_name, business_concept_id in queries_ids_info:
+    for rule_implementation, query_id, rule_name, business_concept_id in queries_ids_info:
         result = dbConnector.get_results(query_id)
         array_results.append({"business_concept_id": business_concept_id,
-                              "quality_control_name": quality_control_name,
-                              "system": quality_rule["system"],
-                              "group": quality_rule["table"],
-                              "structure_name": quality_rule["table"],
-                              "field_name": quality_rule["column"],
+                              "rule_name": rule_name,
+                              "system": rule_implementation["system"],
+                              "group": rule_implementation["table"],
+                              "structure_name": rule_implementation["table"],
+                              "field_name": rule_implementation["column"],
                               "date": datetime.date.today().strftime('%Y-%m-%d'),
                               "result": result})
 

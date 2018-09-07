@@ -6,8 +6,8 @@ SPEC_RESULTSET_JSON_S3 = {'results': ('ResultSet.Rows', ['Data'])}
 SPEC_VALUE_JSON_S3 = ('results', [["VarCharValue"]])
 
 
-GET_QUALITY_CONTROLS_BY_BUSINESS_CONCEPT = "/api/rules/concept/{id}"
-GET_QUALITY_CONTROLS = "/api/rules"
+GET_RULES_BY_BUSINESS_CONCEPT = "/api/rules/concept/{id}?status={status}"
+GET_RULES = "/api/rules"
 SEND_CSV_RESULTS = "/api/rule_results"
 NAME_KEY_FILES_DQ = "rule_results"
 
@@ -23,7 +23,7 @@ PATH_VAULT_SOURCES = "meta-connect/sources/data/"
 API_DATABASE_PATH = "api.v1.databases."
 
 
-CSV_COLUMNS = ['business_concept_id','quality_control_name','system',
+CSV_COLUMNS = ['business_concept_id','rule_name','system',
                'group', 'structure_name', 'field_name',
                'date', 'result']
 
@@ -43,8 +43,8 @@ TYPE_INTEGRITY = "integrity"
 TYPE_MAX_DATE = "max_date"
 TYPE_MIN_DATE = "min_date"
 TYPE_DATES_RANGE = "dates_range"
-TYPE_GENERICO = "generico"
-
+TYPE_CUSTOM = "custom_validation"
+VALID_EXEC_STATUS = "selectedToExecute"
 QUERY_INTEGER_VALUES_RANGE = """
 SELECT COUNT(*)*100/(SELECT COUNT(*)
     FROM {TABLE})

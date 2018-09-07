@@ -12,7 +12,12 @@ These instructions will get you a copy of the service up and running on your loc
   * Create virtualenv under the project folder with `virtualenv -p python3 venv && source venv/bin/activate`
   * Install dependencies with `pip install -e .`
   * Install dependencies in enviroment develop with `pip install -e .[dev]`
-  * Launch server with `python meta_connect.py`
+  * Create database: python commands/create_db.py
+  * Drop database: python commands/drop_db.py
+  * Init migrations: python api/manage.py db init
+  * Create migrations: python api/manage.py db migrate
+  * Upgrade migrations: python api/manage.py db upgrade
+  * Launch server with `python run.py`
 
 ## Built With
 
