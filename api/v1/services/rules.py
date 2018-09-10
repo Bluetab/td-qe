@@ -26,9 +26,10 @@ class Rules(object):
 
     @staticmethod
     def parser_result_get_ri(rule_implementation_raw):
-        spec = {"system": ("system"),
-                "table": ("system_params.table"),
-                "column": ("system_params.column"),
+        spec = { "rule_implementation_id": ("id"), 
+                "system": ("system"),
+                "table": lambda t: t['system_params']["table"] if t['system_params'].get("table", None) else OMIT,
+                "column": lambda t: t['system_params']["column"] if t['system_params'].get("column", None) else OMIT,
                 "type": ("type")}
         return glom(rule_implementation_raw, spec)
 
@@ -129,8 +130,9 @@ class Rules(object):
 
     @staticmethod
     def __query_custom_validation(rule_implementation=None, rule=None):
-        return CustomValidationsModel.find_by_rule_id(
-            rule["rule_id"]
-            )["query"]
+        query_execute = CustomValidationsModel.find_by_rule_implementation_id(
+            rule_implementation["rule_implementation_id"]
+            ).to_dict()["query_validation"]
+        return query_execute
 
 

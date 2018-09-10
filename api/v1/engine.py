@@ -41,7 +41,6 @@ def rules_by_id(business_concept_id):
 def execute_rules_quality(data):
 
     rules = Rules.parser_result_get_rules(data)
-
     queries_ids_info = []
     for rule in rules:
         rule_implementations = rule["rule_implementations"]
@@ -68,9 +67,9 @@ def execute_rules_quality(data):
         array_results.append({"business_concept_id": business_concept_id,
                               "rule_name": rule_name,
                               "system": rule_implementation["system"],
-                              "group": rule_implementation["table"],
-                              "structure_name": rule_implementation["table"],
-                              "field_name": rule_implementation["column"],
+                              "group": rule_implementation["table"] if rule_implementation.get("table", None) else None,
+                              "structure_name": rule_implementation["table"] if rule_implementation.get("table", None) else None,
+                              "field_name": rule_implementation["column"] if rule_implementation.get("column", None) else None,
                               "date": datetime.date.today().strftime('%Y-%m-%d'),
                               "result": result})
 

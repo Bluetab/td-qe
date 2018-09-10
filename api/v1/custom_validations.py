@@ -18,7 +18,7 @@ def get_all_custom_validations():
 
 
 @custom_validations.route('/custom_validations', methods=['POST'])
-#@auth.login_required
+@auth.login_required
 @validate_schema('custom_validation_schema')
 def create_custom_validations():
 
@@ -28,13 +28,14 @@ def create_custom_validations():
     if Statement(sql_tokens).get_type() != "SELECT" or Identifier(sql_tokens).is_wildcard():
         return abort(400, {'message': 'Not valid query'})
 
-    if CustomValidationsModel.find_by_rule_id(custom_validation_param['rule_id']):
-        return abort(400, {'message':
-                           'Rule {} already have a validation query'
-                           .format(custom_validation_param['rule_id'])})
+    if CustomValidationsModel.find_by_rule_implementation_id(
+        custom_validation_param['rule_implementation_id']):
+            return abort(400, {'message':
+                            'Rule {} already have a validation query'
+                            .format(custom_validation_param['rule_implementation_id'])})
 
     custom_validation = CustomValidationsModel(
-        rule_id=custom_validation_param["rule_id"],
+        rule_implementation_id=custom_validation_param["rule_implementation_id"],
         query_validation=custom_validation_param["query_validation"])
     custom_validation.insert()
 
@@ -56,12 +57,13 @@ def update_custom_validations(custom_validation_id):
     if not custom_validation:
         return abort(400, {'message': "Custom Validation {} not exits".format(custom_validation_id)})
 
-    if CustomValidationsModel.find_by_rule_id(custom_validation_param['rule_id']):
-        return abort(400, {'message':
-                           'Rule {} already have a validation query'
-                           .format(custom_validation_param['rule_id'])})
+    if CustomValidationsModel.find_by_rule_implementation_id(
+        custom_validation_param['rule_implementation_id']):
+            return abort(400, {'message':
+                            'Rule {} already have a validation query'
+                            .format(custom_validation_param['rule_implementation_id'])})
 
-    custom_validation.rule_id = custom_validation_param["rule_id"]
+    custom_validation.rule_implementation_id = custom_validation_param["rule_implementation_id"]
     custom_validation.query_validation = custom_validation_param["query_validation"]
     custom_validation.insert()
 

@@ -7,10 +7,10 @@ custom_validation_schema = {
         "custom_validations" : {
             "type" : "object",
             "properties" : {
-                "rule_id" : {"type" : "number"},
+                "rule_implementation_id" : {"type" : "number"},
                 "query_validation" : {"type" : "string"}
                 },
-            "required": ["rule_id", "query_validation"]
+            "required": ["rule_implementation_id", "query_validation"]
             },
         },
     "required": ["custom_validations"]
