@@ -4,7 +4,7 @@ from api.common import constants
 from api.common.utils import get_accept_auth_header, auth_token
 from api.model.entities.custom_validations_model import CustomValidationsModel
 from glom import glom, OMIT
- 
+
 import requests
 
 class Rules(object):
@@ -26,11 +26,10 @@ class Rules(object):
 
     @staticmethod
     def parser_result_get_ri(rule_implementation_raw):
-        spec = { "rule_implementation_id": ("id"), 
+        spec = {"rule_implementation_id": ("id"),
                 "system": ("system"),
-                "table": lambda t: t['system_params']["table"] if t['system_params'].get("table", None) else OMIT,
-                "column": lambda t: t['system_params']["column"] if t['system_params'].get("column", None) else OMIT,
-                "type": ("type")}
+                "table":  lambda t: t['system_params']["table"] if t['system_params'].get("table", None) else OMIT,
+                "column": lambda t: t['system_params']["column"] if t['system_params'].get("column", None) else OMIT}
         return glom(rule_implementation_raw, spec)
 
 
@@ -50,10 +49,8 @@ class Rules(object):
             constants.TYPE_CUSTOM: Rules.__query_custom_validation
         }
 
-
-        return switcher.get(
-            rule_implementation["type"],
-            rule_implementation["type"])(rule_implementation, rule)
+        type = rule["rule_type"]["name"]
+        return switcher.get(type, type)(rule_implementation, rule)
 
 
     @staticmethod
@@ -134,5 +131,3 @@ class Rules(object):
             rule_implementation["rule_implementation_id"]
             ).to_dict()["query_validation"]
         return query_execute
-
-

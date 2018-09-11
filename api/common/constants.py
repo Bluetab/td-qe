@@ -23,9 +23,7 @@ PATH_VAULT_SOURCES = "meta-connect/sources/data/"
 API_DATABASE_PATH = "api.v1.databases."
 
 
-CSV_COLUMNS = ['business_concept_id','rule_name','system',
-               'group', 'structure_name', 'field_name',
-               'date', 'result']
+CSV_COLUMNS = ['rule_implementation_id', 'date', 'result']
 
 
 TYPE_MANDATORY_FIELD = "mandatory_field"

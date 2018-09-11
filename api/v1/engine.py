@@ -14,7 +14,7 @@ engine = Blueprint('engine', __name__)
 @auth.login_required
 def all_rules():
 
-    data = Rules.get_data_from_dq(constants.GET_RULES, 
+    data = Rules.get_data_from_dq(constants.GET_RULES,
         status=constants.VALID_EXEC_STATUS)
     status_code = execute_rules_quality(data)
     if status_code != 200:
@@ -28,7 +28,7 @@ def rules_by_id(business_concept_id):
 
     data = Rules.get_data_from_dq(
         constants.GET_RULES_BY_BUSINESS_CONCEPT,
-        business_concept_id, 
+        business_concept_id,
         constants.VALID_EXEC_STATUS
     )
 
@@ -39,8 +39,8 @@ def rules_by_id(business_concept_id):
 
 
 def execute_rules_quality(data):
-
     rules = Rules.parser_result_get_rules(data)
+
     queries_ids_info = []
     for rule in rules:
         rule_implementations = rule["rule_implementations"]
@@ -56,20 +56,12 @@ def execute_rules_quality(data):
                 dbConnector = module.db_connector.DbConnector(**keys)
                 dbConnector.connect()
                 query_id = dbConnector.execute(query)
-                queries_ids_info.append((rule_implementation, query_id,
-                                         rule["name"],
-                                         rule["business_concept_id"]))
-
+                queries_ids_info.append((rule_implementation["rule_implementation_id"], query_id))
 
     array_results = []
-    for rule_implementation, query_id, rule_name, business_concept_id in queries_ids_info:
+    for rule_implementation_id, query_id in queries_ids_info:
         result = dbConnector.get_results(query_id)
-        array_results.append({"business_concept_id": business_concept_id,
-                              "rule_name": rule_name,
-                              "system": rule_implementation["system"],
-                              "group": rule_implementation["table"] if rule_implementation.get("table", None) else None,
-                              "structure_name": rule_implementation["table"] if rule_implementation.get("table", None) else None,
-                              "field_name": rule_implementation["column"] if rule_implementation.get("column", None) else None,
+        array_results.append({"rule_implementation_id": rule_implementation_id,
                               "date": datetime.date.today().strftime('%Y-%m-%d'),
                               "result": result})
 
