@@ -14,7 +14,7 @@ engine = Blueprint('engine', __name__)
 @auth.login_required
 def all_rules():
 
-    data = Rules.get_data_from_dq(constants.GET_RULES,
+    data = Rules.get_data_from_dq(constants.GET_RULE_IMPLEMENTATIONS,
         status=constants.VALID_EXEC_STATUS)
     status_code = execute_rules_quality(data)
     if status_code != 200:
@@ -27,7 +27,7 @@ def all_rules():
 def rules_by_id(business_concept_id):
 
     data = Rules.get_data_from_dq(
-        constants.GET_RULES_BY_BUSINESS_CONCEPT,
+        constants.GET_RULE_IMPLEMENTATIONS_BY_BUSINESS_CONCEPT,
         business_concept_id,
         constants.VALID_EXEC_STATUS
     )
@@ -39,30 +39,27 @@ def rules_by_id(business_concept_id):
 
 
 def execute_rules_quality(data):
-    rules = Rules.parser_result_get_rules(data)
+    rule_implementations = Rules.parse_rule_implementations(data)
 
     queries_ids_info = []
-    for rule in rules:
-        rule_implementations = rule["rule_implementations"]
-        for rule_implementation_raw in rule_implementations:
-            rule_implementation = Rules.parser_result_get_ri(rule_implementation_raw)
-            keys = vault.get_data_from_vault(constants.PATH_VAULT_SOURCES +
-                                             rule_implementation["system"])
+    for rule_implementation in rule_implementations:
+        keys = vault.get_data_from_vault(constants.PATH_VAULT_SOURCES +
+                                         rule_implementation["system"])
 
-            if keys != None:
-                query = Rules.get_query_by_type(rule_implementation, rule)
-                module = importlib.import_module(constants.API_DATABASE_PATH +
-                                                 keys.pop("connection_type"))
-                dbConnector = module.db_connector.DbConnector(**keys)
-                dbConnector.connect()
-                query_id = dbConnector.execute(query)
-                queries_ids_info.append((rule_implementation["rule_implementation_id"], query_id))
+        if keys != None:
+            query = Rules.get_query_by_type(rule_implementation)
+            module = importlib.import_module(constants.API_DATABASE_PATH +
+                                             keys.pop("connection_type"))
+            dbConnector = module.db_connector.DbConnector(**keys)
+            dbConnector.connect()
+            query_id = dbConnector.execute(query)
+            queries_ids_info.append((rule_implementation["id"], query_id))
 
     array_results = []
     for rule_implementation_id, query_id in queries_ids_info:
         result = dbConnector.get_results(query_id)
         array_results.append({"rule_implementation_id": rule_implementation_id,
-                              "date": datetime.date.today().strftime('%Y-%m-%d'),
+                              "date": datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S'),
                               "result": result})
 
     path_save_results = constants.SAVE_RESULTS + \

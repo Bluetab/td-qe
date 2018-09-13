@@ -6,8 +6,8 @@ SPEC_RESULTSET_JSON_S3 = {'results': ('ResultSet.Rows', ['Data'])}
 SPEC_VALUE_JSON_S3 = ('results', [["VarCharValue"]])
 
 
-GET_RULES_BY_BUSINESS_CONCEPT = "/api/rules/concept/{id}?status={status}"
-GET_RULES = "/api/rules"
+GET_RULE_IMPLEMENTATIONS_BY_BUSINESS_CONCEPT = "/api/rule_implementations?rule_business_concept_id={id}&rule_status={status}"
+GET_RULE_IMPLEMENTATIONS = "/api/rule_implementations?rule_status={status}"
 SEND_CSV_RESULTS = "/api/rule_results"
 NAME_KEY_FILES_DQ = "rule_results"
 

@@ -20,21 +20,17 @@ class Rules(object):
 
 
     @staticmethod
-    def parser_result_get_rules(data):
-        return list(filter(None, data))
-
-
-    @staticmethod
-    def parser_result_get_ri(rule_implementation_raw):
-        spec = {"rule_implementation_id": ("id"),
+    def parse_rule_implementations(rule_implementation_raw):
+        spec = [{"id": ("id"),
                 "system": ("system"),
                 "table":  lambda t: t['system_params']["table"] if t['system_params'].get("table", None) else OMIT,
-                "column": lambda t: t['system_params']["column"] if t['system_params'].get("column", None) else OMIT}
+                "column": lambda t: t['system_params']["column"] if t['system_params'].get("column", None) else OMIT,
+                "rule": ("rule")}]
         return glom(rule_implementation_raw, spec)
 
 
     @staticmethod
-    def get_query_by_type(rule_implementation, rule):
+    def get_query_by_type(rule_implementation):
 
         switcher = {
             constants.TYPE_INTEGER_VALUES_RANGE: Rules.__query_integer_values_range,
@@ -49,6 +45,7 @@ class Rules(object):
             constants.TYPE_CUSTOM: Rules.__query_custom_validation
         }
 
+        rule = rule_implementation["rule"]
         type = rule["rule_type"]["name"]
         return switcher.get(type, type)(rule_implementation, rule)
 
