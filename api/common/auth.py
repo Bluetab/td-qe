@@ -26,7 +26,7 @@ def unauthorized():
 
 def verify_auth_token(token):
     try:
-        token = jwt.decode(token, app.config['SECRET_KEY'],
+        token = jwt.decode(token, app.config['GUARDIAN_SECRET_KEY'],
                            algorithms=app.config['ALGORITHM'],
                            audience=app.config['JWT_AUD'])
         if(token["is_admin"] != True):

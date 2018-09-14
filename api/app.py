@@ -1,5 +1,7 @@
 from flask import Flask, make_response, jsonify
 from api.model.base_model import db
+from flask_migrate import Migrate
+from flask_migrate import upgrade
 from flask_cors import CORS
 import os
 
@@ -12,6 +14,7 @@ CORS(app)
 app.config.from_object('api.settings.config.{}Config'.format(environ))
 
 db.init_app(app)
+migrate = Migrate(app, db)
 
 @app.errorhandler(404)
 def not_found(error):
@@ -25,3 +28,10 @@ API_V1 = '/api'
 
 app.register_blueprint(engine, url_prefix=API_V1)
 app.register_blueprint(custom_validations, url_prefix=API_V1)
+
+
+@app.cli.command()
+def deploy():
+    """Run deployment tasks."""
+    # migrate database to latest revision
+    upgrade()

@@ -7,7 +7,7 @@ class Config(object):
     DEBUG = False
     TESTING = False
     PORT = constants.PORT_DES
-    SECRET_KEY = 'SuperSecretTruedat'
+    GUARDIAN_SECRET_KEY = 'SuperSecretTruedat'
     SERVICE_TD_DQ = "http://localhost:4004"
     SERVICE_TD_AUTH = "http://localhost:4001"
     JWT_AUD = 'tdauth'
@@ -36,8 +36,16 @@ class ProductionConfig(Config):
     EXTERNAL_HOST = 'truedat.bluetab.net'
     EXTERNAL_PORT = 8008
     SWAGGER_HOST = "{}:{}".format(EXTERNAL_HOST, EXTERNAL_PORT)
-    API_USERNAME = "api-admin"
-    API_PASSWORD = "xxxxxx"
+    API_USERNAME = os.getenv('API_USERNAME', "api-admin")
+    API_PASSWORD = os.getenv('API_PASSWORD', "xxxxxx")
+    DB_USER = os.getenv('DB_USER', "postgres")
+    DB_PASSWORD = os.getenv('DB_PASSWORD', "postgres")
+    DB_NAME = os.getenv('DB_NAME', "td_qe_prod")
+    DB_HOST = os.getenv('DB_HOST', "localhost")
+    VAULT_TOKEN = os.getenv('VAULT_TOKEN', "319ee813-46f0-6153-a428-5a15ee5b4bdb")
+    GUARDIAN_SECRET_KEY = os.getenv('GUARDIAN_SECRET_KEY', 'SuperSecretTruedat')
+    SQLALCHEMY_DATABASE_URI="postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}".format(
+        DB_USER=DB_USER, DB_PASSWORD=DB_PASSWORD, DB_HOST=DB_HOST, DB_NAME=DB_NAME)
 
 
 class DevelopmentConfig(Config):
