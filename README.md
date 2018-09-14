@@ -14,9 +14,9 @@ These instructions will get you a copy of the service up and running on your loc
   * Install dependencies in enviroment develop with `pip install -e .[dev]`
   * Create database: python commands/create_db.py
   * Drop database: python commands/drop_db.py
-  * Init migrations: python api/manage.py db init
-  * Create migrations: python api/manage.py db migrate
-  * Upgrade migrations: python api/manage.py db upgrade
+  * Init migrations: python commands/manage.py db init
+  * Create migrations: python commands/manage.py db migrate
+  * Upgrade migrations: python commands/manage.py db upgrade
   * Launch server with `python run.py`
 
 ## Built With

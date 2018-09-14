@@ -5,7 +5,9 @@ WORKDIR /app
 
 # ---- Dependencies ----
 FROM base AS dependencies
-RUN apk add --no-cache curl pkgconfig openssl-dev libffi-dev musl-dev make gcc krb5-dev
+RUN apk update && \
+    apk add postgresql-dev gcc python3-dev musl-dev libffi-dev make && \
+    pip install psycopg2
 COPY requirements/requirements.txt ./
 # install app dependencies
 RUN pip install -r requirements.txt
