@@ -1,4 +1,4 @@
-## TD_QE
+## /truedat Quality Engine
 
 TdQE is a back-end service developed as part of True Dat project to execute quality rules.
 
