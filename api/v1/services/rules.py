@@ -11,9 +11,9 @@ class Rules(object):
 
 
     @staticmethod
-    def get_data_from_dq(path_url, business_concept_id=None, status=None):
+    def get_data_from_dq(path_url, business_concept_id=None, status=None, rule_tags=None):
         response = requests.get(app.config["SERVICE_TD_DQ"] +
-                                path_url.format(id=business_concept_id, status=status),
+                                path_url.format(id=business_concept_id, status=status, rule_tags=','.join(rule_tags)),
                                 headers=get_accept_auth_header(auth_token()))
         data = response.json()["data"]
         return data

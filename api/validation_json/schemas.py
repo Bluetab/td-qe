@@ -15,3 +15,12 @@ custom_validation_schema = {
         },
     "required": ["custom_validations"]
     }
+
+tags_validation_schema = {
+    "type": "object",
+    "properties": {
+        "rule_tags": {
+            "type": "array"
+        }
+    }    
+}

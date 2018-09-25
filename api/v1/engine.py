@@ -1,6 +1,7 @@
 from api.common.utils import send_data_to_dq_results, writeDictToCSV, abort
 from api.common import constants
 from api.v1.services.rules import Rules
+from api.validation_json.validation import validate_schema
 from flask import Blueprint, request
 from api.common.auth import auth
 from api.common import vault
@@ -8,14 +9,19 @@ import importlib
 import datetime
 
 
+
 engine = Blueprint('engine', __name__)
 
 @engine.route('/engine/execute', methods=['POST'])
 @auth.login_required
+@validate_schema("tags_validation_schema")
 def all_rules():
 
+    rule_tags = request.json["rule_tags"]
+
     data = Rules.get_data_from_dq(constants.GET_RULE_IMPLEMENTATIONS,
-        status=constants.VALID_EXEC_STATUS)
+        status=constants.VALID_EXEC_STATUS, rule_tags=rule_tags)
+
     status_code = execute_rules_quality(data)
     if status_code != 200:
         return abort(422, {'message': "unprocessable entity"})
@@ -24,12 +30,16 @@ def all_rules():
 
 @engine.route('/engine/<int:business_concept_id>/execute', methods=['POST'])
 @auth.login_required
+@validate_schema("tags_validation_schema")
 def rules_by_id(business_concept_id):
 
+    rule_tags = request.json["rule_tags"]
+    
     data = Rules.get_data_from_dq(
         constants.GET_RULE_IMPLEMENTATIONS_BY_BUSINESS_CONCEPT,
         business_concept_id,
-        constants.VALID_EXEC_STATUS
+        constants.VALID_EXEC_STATUS,
+        rule_tags
     )
 
     status_code = execute_rules_quality(data)
