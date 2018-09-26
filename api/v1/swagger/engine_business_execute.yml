@@ -2,13 +2,17 @@ Execute all rule implementations by Business Concept
 ---
 tags:
   - engine
+consumes:
+  - application/json
+produces:
+  - application/json
 parameters:
   - type: integer
     required: true
     name: business_concept_id
     in: path
     description: Business Concept Id
-    in: body
+  - in: body
     name: body
     description: Execute rule implementations
     required: true

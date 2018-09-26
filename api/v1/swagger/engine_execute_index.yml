@@ -2,6 +2,10 @@ Execute all rule implementations
 ---
 tags:
   - engine
+consumes:
+  - application/json
+produces:
+  - application/json
 definitions:
   RuleTags:
     type: object
@@ -11,12 +15,13 @@ definitions:
       rule_tags:
         type: array
         description: Rule Tags
+        items:
+          type: string
 parameters:
 - in: body
-  name: ruleTags
+  name: body
   description: Execute rule implementations
-  consumes:
-    - application/json
+  required: true
   schema:
     $ref: '#/definitions/RuleTags'
 responses:
