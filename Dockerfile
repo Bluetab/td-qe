@@ -34,4 +34,4 @@ COPY --from=build /app/ ./
 
 EXPOSE 4009
 
-CMD ["sh", "-c", "flask deploy && gunicorn -b 0.0.0.0:4009 wsgi"]
+CMD ["sh", "-c", "APP_ENV=Production flask deploy && APP_ENV=Production gunicorn -b 0.0.0.0:4009 wsgi"]
