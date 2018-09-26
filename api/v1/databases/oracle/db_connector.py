@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from api.v1.databases.base_connector import BaseConnector
+from api.v1.databases.oracle import queries
 import cx_Oracle
 
-class DbConnector(object):
+class DbConnector(BaseConnector):
 
     def __init__(self, username=None, password=None, hostname=None,
         port=None, servicename=None):
@@ -11,30 +13,22 @@ class DbConnector(object):
             and servicename is not None:
             self.username = username
             self.password = password
-            self.hostname = hostname
-            self.port = port
-            self.servicename = servicename
             self.db = None
+            self.__dsn_tns = cx_Oracle.makedsn(hostname, port, service_name=servicename)
+
 
     def connect(self):
-        """ Connect to the database. """
 
         try:
-            dsn_tns = cx_Oracle.makedsn(self.hostname, self.port, service_name=self.servicename)
-            self.db = cx_Oracle.connect(self.username, str(self.password), dsn_tns)
+            self.db = cx_Oracle.connect(self.username, str(self.password), self.__dsn_tns)
         except cx_Oracle.DatabaseError as e:
             # Log error as appropriate
             raise
 
-        # If the database connection succeeded create the cursor
-        # we-re going to use.
         self.cursor = self.db.cursor()
 
+
     def disconnect(self):
-        """
-        Disconnect from the database. If this fails, for instance
-        if the connection instance doesn't exist, ignore the exception.
-        """
 
         try:
             self.cursor.close()
@@ -42,16 +36,11 @@ class DbConnector(object):
         except cx_Oracle.DatabaseError:
             pass
 
+
     def execute(self, sql, bindvars=None, commit=False):
-        """
-        Execute whatever SQL statements are passed to the method;
-        commit if specified. Do not specify fetchall() in here as
-        the SQL statement may not be a select.
-        bindvars is a dictionary of variables you pass to execute.
-        """
 
         try:
-            self.cursor.execute(sql, bindvars)
+            self.cursor.execute(sql)
         except cx_Oracle.DatabaseError as e:
             # Log error as appropriate
             raise
@@ -59,3 +48,17 @@ class DbConnector(object):
         # Only commit if it-s necessary.
         if commit:
             self.db.commit()
+
+        return self.cursor.fetchone()[0]
+
+
+    def _query_integer_values_range(self, rule_implementation, rule):
+        return queries.QUERY_INTEGER_VALUES_RANGE.format(
+            TABLE=rule_implementation["table"],
+            COLUMN=rule_implementation["column"],
+            MIN_VALUE=rule["type_params"]["min_value"],
+            MAX_VALUE=rule["type_params"]["max_value"])
+
+
+    def get_results(self, query_id):
+        return query_id
