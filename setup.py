@@ -16,7 +16,7 @@ def get_requirements(key):
 
 setup(
     name='td_qe',
-    version='1.5.0',
+    version='1.5.1',
     description='Api for execute quality rules',
     author='bluetab',
     author_email='bluetab@bluetab.net',
