@@ -18,10 +18,6 @@ def auth_token():
     return token
 
 
-def abort(status_code, body=None):
-    return make_response(jsonify(body), status_code)
-
-
 def get_content_auth_header(token):
     HEADERS = HEADERS_CONTENT
     HEADERS.update(
@@ -72,46 +68,3 @@ def send_data_to_dq_results(name_file):
 
 def get_auth_header(token):
     return {'Authorization': 'Bearer {token}'.format(token=token)}
-
-
-def checkparams(params, request):
-    if not request.json:
-        return "Error body json not found"
-    for param in params:
-        if param not in request.json:
-            return "Error {} not found".format(param)
-    return False
-
-
-def checkonlyone(params, request):
-    if not request.json:
-        return "Error body json not found", None
-    total = []
-    for param in params:
-        if param in request.json:
-            total.append(param)
-    if len(total) > 1:
-        return "Error, multiple params founds: {}. \
-                You can use only one".format(",".join(total)), None
-    if len(total) == 0:
-        return "Error, params {} not founds".format(" or ".join(params)), None
-    return False, total[0]
-
-
-def findInArgs(default, args):
-    arg = ""
-    value = ""
-    for key, value in args.items():
-        if key == default:
-            arg = default
-            value = value
-    if arg == "":
-        return "Error, '{}' not found in args".format(default), None
-    return False, [arg, value]
-
-
-def docstring_parameter(*sub):
-    def dec(obj):
-        obj.__doc__ = obj.__doc__.format(*sub)
-        return obj
-    return dec

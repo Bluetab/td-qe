@@ -6,10 +6,11 @@ SPEC_RESULTSET_JSON_S3 = {'results': ('ResultSet.Rows', ['Data'])}
 SPEC_VALUE_JSON_S3 = ('results', [["VarCharValue"]])
 
 
-GET_RULE_IMPLEMENTATIONS_BY_BUSINESS_CONCEPT = "/api/rule_implementations?rule_business_concept_id={id}&rule_status={status}&rule_tags={rule_tags}"
-GET_RULE_IMPLEMENTATIONS = "/api/rule_implementations?rule_status={status}&rule_tags={rule_tags}"
+GET_RULE_IMPLEMENTATIONS_BY_BUSINESS_CONCEPT = "/api/rule_implementations?rule_business_concept_id={id}&rule_status={status}"
+GET_RULE_IMPLEMENTATIONS = "/api/rule_implementations?rule_status={status}"
 SEND_CSV_RESULTS = "/api/rule_results"
 NAME_KEY_FILES_DQ = "rule_results"
+PARAM_RULE_TAGS = "&rule_tags={rule_tags}"
 
 SAVE_RESULTS = "results/"
 CSV_EXTENSION = ".csv"
@@ -23,7 +24,7 @@ PATH_VAULT_SOURCES = "meta-connect/sources/data/"
 API_DATABASE_PATH = "api.v1.databases."
 
 
-CSV_COLUMNS = ['rule_implementation_id', 'date', 'result']
+CSV_COLUMNS = ['implementation_key', 'date', 'result']
 
 
 TYPE_MANDATORY_FIELD = "mandatory_field"
@@ -43,59 +44,3 @@ TYPE_MIN_DATE = "min_date"
 TYPE_DATES_RANGE = "dates_range"
 TYPE_CUSTOM = "custom_validation"
 VALID_EXEC_STATUS = "selectedToExecute"
-QUERY_INTEGER_VALUES_RANGE = """
-SELECT COUNT(*)*100/(SELECT COUNT(*)
-    FROM {TABLE})
-FROM {TABLE}
-WHERE {COLUMN} >= {MIN_VALUE}
-AND {COLUMN} <= {MAX_VALUE};"""
-
-QUERY_MIN_VALUE = """
-SELECT COUNT(*)*100/(SELECT COUNT(*)
-    FROM {TABLE})
-FROM {TABLE}
-WHERE {COLUMN} >= {MIN_VALUE};"""
-
-QUERY_MAX_VALUE = """
-SELECT COUNT(*)*100/(SELECT COUNT(*)
-    FROM {TABLE})
-FROM {TABLE}
-WHERE {COLUMN} <= {MAX_VALUE};"""
-
-QUERY_MANDATORY_FIELD = """
-SELECT COUNT(*)*100/(SELECT COUNT(*)
-    FROM {TABLE})
-FROM {TABLE}
-WHERE {COLUMN} IS NOT NULL;"""
-
-QUERY_DATES_RANGE = """
-SELECT COUNT(*)*100/(SELECT COUNT(*)
-    FROM {TABLE})
-FROM {TABLE}
-WHERE {COLUMN}
-BETWEEN {COLUMN} '{MIN_DATE}'
-AND {COLUMN} '{MAX_DATE}';"""
-
-QUERY_MIN_DATE = """
-SELECT COUNT(*)*100/(SELECT COUNT(*)
-    FROM {TABLE})
-FROM {TABLE}
-WHERE {COLUMN} >= '{MIN_DATE}';"""
-
-QUERY_MAX_DATE = """
-SELECT COUNT(*)*100/(SELECT COUNT(*)
-    FROM {TABLE})
-FROM {TABLE}
-WHERE {COLUMN} >= '{MAX_DATE}';"""
-
-QUERY_MIN_TEXT = """
-SELECT COUNT(*)*100.0/(SELECT COUNT(*)
-    FROM {TABLE})
-FROM {TABLE}
-WHERE LENGTH({COLUMN}) >= {MIN_TEXT};"""
-
-QUERY_MAX_TEXT = """
-SELECT COUNT(*)*100.0/(SELECT COUNT(*)
-    FROM {TABLE})
-FROM {TABLE}
-WHERE LENGTH({COLUMN}) <= {MAX_TEXT};"""

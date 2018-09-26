@@ -16,8 +16,7 @@ class Config(object):
     EXTERNAL_PORT = 4009
     SWAGGER_HOST = "{}:{}".format(EXTERNAL_HOST, EXTERNAL_PORT)
     VAULT_HOST = "http://localhost:4008"
-    VAULT_TOKEN = "319ee813-46f0-6153-a428-5a15ee5b4bdb"
-    VAULT_UNSEAL_KEY = "9093b7b40e8431cb86a5a03b6e998247eeb0398f0c0904227bd653a1c2bb488f"
+    VAULT_TOKEN = "dead2687-ef0d-6ade-01b2-dec2ad244786"
     SQLALCHEMY_TRACK_MODIFICATIONS=False
     DB_USER = "postgres"
     DB_PASSWORD = "postgres"

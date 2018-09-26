@@ -1,5 +1,5 @@
+from api.v1.exceptions.invalid_usage import InvalidUsage
 from flask_httpauth import HTTPTokenAuth
-from api.common.utils import abort
 from api.app import app
 from flask import g
 import jwt
@@ -21,7 +21,7 @@ def verify_token(token):
 
 @auth.error_handler
 def unauthorized():
-    return abort(403, {'error': 'Unauthorized access'})
+    raise InvalidUsage('Unauthorized access', status_code=403)
 
 
 def verify_auth_token(token):

@@ -1,20 +1,20 @@
 
 
-
 custom_validation_schema = {
     "type" : "object",
     "properties" : {
         "custom_validations" : {
             "type" : "object",
             "properties" : {
-                "rule_implementation_id" : {"type" : "number"},
+                "implementation_key" : {"type" : "string"},
                 "query_validation" : {"type" : "string"}
                 },
-            "required": ["rule_implementation_id", "query_validation"]
+            "required": ["implementation_key", "query_validation"]
             },
         },
     "required": ["custom_validations"]
     }
+
 
 tags_validation_schema = {
     "type": "object",
@@ -22,5 +22,6 @@ tags_validation_schema = {
         "rule_tags": {
             "type": "array"
         }
-    }    
+    },
+    "required": ["rule_tags"]
 }

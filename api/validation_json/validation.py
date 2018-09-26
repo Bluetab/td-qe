@@ -1,3 +1,4 @@
+from api.v1.exceptions.invalid_usage import InvalidUsage
 from jsonschema.exceptions import ValidationError
 from api.validation_json import schemas
 from flask import jsonify, request
