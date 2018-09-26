@@ -32,8 +32,8 @@ class ProductionConfig(Config):
     APPLICATION_ROOT = '/home/ec2-user/td_qe'
     PORT = constants.PORT_PRO
     SWAGGER_ROOT = app.root_path.replace(APPLICATION_ROOT + "/", "")
-    EXTERNAL_HOST = 'truedat.bluetab.net'
-    EXTERNAL_PORT = 8008
+    EXTERNAL_HOST = os.getenv('EXTERNAL_HOST', "localhost")
+    EXTERNAL_PORT = os.getenv('EXTERNAL_PORT', 8008)
     SWAGGER_HOST = "{}:{}".format(EXTERNAL_HOST, EXTERNAL_PORT)
     API_USERNAME = os.getenv('API_USERNAME', "api-admin")
     API_PASSWORD = os.getenv('API_PASSWORD', "xxxxxx")
