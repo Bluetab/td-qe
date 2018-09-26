@@ -1,0 +1,19 @@
+Execute all rule implementations by Business Concept
+---
+tags:
+  - engine
+parameters:
+  - type: integer
+    required: true
+    name: business_concept_id
+    in: path
+    description: Business Concept Id
+    in: body
+    name: body
+    description: Execute rule implementations
+    required: true
+    schema:
+      $ref: '#/definitions/RuleTags'
+responses:
+  204:
+    description: Execute rule implementations succesfully.

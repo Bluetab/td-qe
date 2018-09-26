@@ -1,0 +1,29 @@
+List all custom validation
+---
+tags:
+  - custom_validation
+definitions:
+  CustomValidation:
+    type: object
+    properties:
+      id:
+        type: number
+        description: Id custom validation
+      implementation_key:
+        type: string
+        description: Implementation Key
+      query_validation:
+        type: string
+        description: Query to execute
+  CustomValidationList:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/CustomValidation'
+responses:
+  201:
+    description: List All custom validation
+    schema:
+      $ref: '#/definitions/CustomValidationList'

@@ -1,0 +1,25 @@
+Modify a custom validation
+---
+tags:
+  - custom_validation
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+- type: integer
+  required: true
+  name: custom_validation_id
+  in: path
+  description: Custom Validation Id
+- in: body
+  name: body
+  description: Modify a custom validation to be persisted to the database
+  required: true
+  schema:
+    $ref: '#/definitions/CustomValidationRequest'
+responses:
+      201:
+        description: The custom validation inserted in the database
+        schema:
+          $ref: '#/definitions/CustomValidationData'

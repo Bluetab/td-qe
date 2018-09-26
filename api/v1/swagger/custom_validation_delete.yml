@@ -1,0 +1,17 @@
+Delete a custom validation
+---
+tags:
+  - custom_validation
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - type: integer
+    required: true
+    name: custom_validation_id
+    in: path
+    description: Custom Validation Id
+responses:
+      204:
+        description: Delete a custom validation inserted in the database

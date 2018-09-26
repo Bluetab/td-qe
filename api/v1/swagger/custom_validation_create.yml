@@ -1,0 +1,43 @@
+Create custom validation
+---
+tags:
+  - custom_validation
+consumes:
+  - application/json
+produces:
+  - application/json
+definitions:
+  CustomValidationData:
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/CustomValidation'
+  CustomValidationRequest:
+    required:
+      - custom_validations
+    properties:
+      custom_validations:
+        type: object
+        description: Custom Validation
+        required:
+          - query_validation
+          - implementation_key
+        properties:
+          query_validation:
+            type: string
+            description: Query to execute
+          implementation_key:
+            type: string
+            description: Implementation Key
+parameters:
+- in: body
+  name: body
+  description: Create a custom validation to be persisted to the database
+  required: true
+  schema:
+    $ref: '#/definitions/CustomValidationRequest'
+responses:
+  201:
+    description: The custom validation inserted in the database
+    schema:
+      $ref: '#/definitions/CustomValidationData'

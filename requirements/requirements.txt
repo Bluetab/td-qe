@@ -17,3 +17,4 @@ psycopg2==2.7.5
 psycopg2-binary==2.7.5
 jsonschema==2.6.0
 sqlparse==0.2.4
+flasgger==0.9.1

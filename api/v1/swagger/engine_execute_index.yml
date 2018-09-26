@@ -1,0 +1,24 @@
+Execute all rule implementations
+---
+tags:
+  - engine
+definitions:
+  RuleTags:
+    type: object
+    properties:
+      required:
+        - rule_tags
+      rule_tags:
+        type: array
+        description: Rule Tags
+parameters:
+- in: body
+  name: ruleTags
+  description: Execute rule implementations
+  consumes:
+    - application/json
+  schema:
+    $ref: '#/definitions/RuleTags'
+responses:
+  204:
+    description: Execute rule implementations succesfully.
