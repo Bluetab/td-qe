@@ -15,7 +15,7 @@ engine = Blueprint('engine', __name__)
 @swag_from('swagger/engine_execute_index.yml')
 def all_rules():
 
-    rule_tags = request.json["rule_tags"] if request.json["rule_tags"] else None
+    rule_tags = request.json.get("rule_tags", None)
 
     data = Engine.get_data_from_dq(constants.GET_RULE_IMPLEMENTATIONS,
         status=constants.VALID_EXEC_STATUS, rule_tags=rule_tags)
@@ -32,7 +32,7 @@ def all_rules():
 @swag_from('swagger/engine_business_execute.yml')
 def rules_by_id(business_concept_id):
 
-    rule_tags = request.json["rule_tags"] if request.json["rule_tags"] else None
+    rule_tags = request.json.get("rule_tags", None)
 
     data = Engine.get_data_from_dq(
         constants.GET_RULE_IMPLEMENTATIONS_BY_BUSINESS_CONCEPT,

@@ -11,13 +11,13 @@ def validate_schema(schema_name):
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kw):
-            if not request.is_json or not request.get_json(silent=True):
+            if not request.is_json:
                 msg = "payload must be a valid json"
                 return jsonify({"error": msg}), 400
             try:
                 validate(request.json, eval("schemas." + schema_name))
             except ValidationError as e:
-                return jsonify({"error": e.message}), 400
+                return jsonify({"error": e.message}), 422
             return f(*args, **kw)
         return wrapper
     return decorator

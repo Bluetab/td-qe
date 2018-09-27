@@ -10,8 +10,6 @@ definitions:
   RuleTags:
     type: object
     properties:
-      required:
-        - rule_tags
       rule_tags:
         type: array
         description: Rule Tags

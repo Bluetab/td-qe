@@ -22,6 +22,5 @@ tags_validation_schema = {
         "rule_tags": {
             "type": "array"
         }
-    },
-    "required": ["rule_tags"]
+    }
 }
