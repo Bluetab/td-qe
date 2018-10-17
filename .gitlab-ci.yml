@@ -1,7 +1,12 @@
+variables:
+  VERSION: "2.6.2"
+  APP_NAME: "td_qe"
+  ECR_NAMESPACE: "truedat"
+
 stages:
   - test
+  - publish
   - deploy
-
 
 test:
   stage: test
