@@ -32,6 +32,7 @@ COPY --from=dependencies /root/.cache /root/.cache
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 COPY --from=build /app/ ./
+RUN mkdir /app/results
 
 EXPOSE 4009
 

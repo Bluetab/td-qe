@@ -9,5 +9,7 @@ def get_data_from_vault(path):
         raise InvalidUsage('Error getting credentials. Check Vault', status_code=400)
     client.token = app.config["VAULT_TOKEN"]
     vault_data = client.read(path)
+    if not vault_data:
+        print("No data found in vault path {path}".format(path=path))
     client.logout()
     return vault_data["data"]["data"] if vault_data else None

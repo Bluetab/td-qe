@@ -59,7 +59,6 @@ def writeDictToCSV(csv_file, csv_columns, dict_data):
 
 
 def send_data_to_dq_results(name_file):
-
     tuple_files = [(NAME_KEY_FILES_DQ, open(name_file, 'rb'))]
     resp = requests.post(app.config["SERVICE_TD_DQ"] + SEND_CSV_RESULTS,
                          files=tuple_files, headers=get_auth_header(auth_token()))

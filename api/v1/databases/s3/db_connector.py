@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from api.common.constants import SPEC_RESULTSET_JSON_S3, SPEC_VALUE_JSON_S3
+from api.v1.databases.base_connector import BaseConnector
 from time import sleep
 from glom import glom
 import boto3
 
 
-class DbConnector(object):
+class DbConnector(BaseConnector):
 
     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
                  region_name=None, bucket=None):
@@ -48,6 +49,7 @@ class DbConnector(object):
                 QueryString=query, ResultConfiguration=
                 {'OutputLocation': self.bucket})["QueryExecutionId"]
 
+        print("Query ID:" + query_id)
         return query_id
 
 
@@ -61,7 +63,9 @@ class DbConnector(object):
 
     def get_results(self, query_id):
 
+        self.connect()
         response = self.__get_query_results(query_id)
+        self.disconnect()
 
         if response == "FAILED":
             response = -1
@@ -71,7 +75,6 @@ class DbConnector(object):
             response = target[1][0]
 
         return response
-
 
 
     def __get_query_results(self, query_id):

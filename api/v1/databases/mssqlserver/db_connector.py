@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from api.v1.databases.base_connector import BaseConnector
 import pymssql
 
-class DbConnector(object):
+class DbConnector(BaseConnector):
 
     def __init__(self, username=None, password=None, hostname=None,
         port=None, database=None):

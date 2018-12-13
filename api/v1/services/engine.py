@@ -21,6 +21,7 @@ class Engine(object):
                                     id=business_concept_id, status=status) + rule_tags,
                                 headers=get_accept_auth_header(auth_token()))
         data = response.json()["data"]
+        print("Data from DQ: " + str(len(data)))
         return data
 
 
@@ -37,14 +38,19 @@ class Engine(object):
     @staticmethod
     def execute_rules_quality(data_raw):
         rule_implementations = Engine.parse_rule_implementations(data_raw)
+        print("Rule Implementations to proccess: " + str(len(rule_implementations)))
 
         connectors_object = Support.set_connector_object(rule_implementations)
+        print("Connectors Object: " + str(connectors_object))
 
         queries_ids_info = []
         for rule_implementation in rule_implementations:
-            dbConnector = connectors_object[rule_implementation["system"]]
-            query_id = dbConnector.execute_by_type(rule_implementation)
-            queries_ids_info.append((rule_implementation["implementation_key"], query_id))
+            if rule_implementation["system"] in connectors_object:
+                dbConnector = connectors_object[rule_implementation["system"]]
+                query_id = dbConnector.execute_by_type(rule_implementation)
+                queries_ids_info.append((rule_implementation["implementation_key"], query_id))
+
+        print("Query Results: " + str(len(queries_ids_info)))
 
         array_results = []
         for implementation_key, query_id in queries_ids_info:
