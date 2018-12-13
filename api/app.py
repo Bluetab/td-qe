@@ -1,6 +1,7 @@
 from api.v1.exceptions.invalid_usage import InvalidUsage
-from flask import Flask, make_response, jsonify
 from api.settings.swagger_config import swagger_config
+from flask import Flask, make_response, jsonify
+from healthcheck import HealthCheck
 from api.model.base_model import db
 from flask_migrate import Migrate
 from flask_migrate import upgrade
@@ -13,6 +14,9 @@ environ = os.getenv("APP_ENV", "Development") if \
     else "Development"
 
 app = Flask(__name__)
+
+health = HealthCheck(app, "/api/ping")
+
 CORS(app)
 app.config.from_object('api.settings.config.{}Config'.format(environ))
 

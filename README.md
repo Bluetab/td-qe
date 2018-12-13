@@ -24,6 +24,7 @@ These instructions will get you a copy of the service up and running on your loc
 * [Flask](https://www.palletsprojects.com/p/flask/) - Python micro framework for building web applications
 * [Tornado](http://www.tornadoweb.org/) - Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed
 * [Flask-cors](https://flask-cors.corydolphin.com/) - Cross Origin Resource Sharing ( CORS ) support for Flask
+* [healthcheck](https://github.com/Runscope/healthcheck) - Write simple healthcheck functions for your Flask apps.
 * [Pyjwt](https://pyjwt.readthedocs.io) - JSON Web Token implementation in Python
 * [Requests](http://python-requests.org) - Python HTTP Requests for Humans™ ✨🍰✨
 * [Glom](https://glom.readthedocs.io) - Python's nested data operator
