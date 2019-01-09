@@ -27,74 +27,80 @@ class BaseConnector:
         rule = rule_implementation["rule"]
         type = rule["rule_type"]["name"]
         query_execute = switcher.get(type, type)(rule_implementation, rule)
+
         self.connect()
         query_id = self.execute(query_execute)
         self.disconnect()
         return query_id
 
+    def get_table_name(self, rule_implementation):
+        return rule_implementation["table"]
+
+    def get_column_name(self, rule_implementation):
+        return rule_implementation["column"]
 
     def _query_integer_values_range(self, rule_implementation, rule):
         return queries.QUERY_INTEGER_VALUES_RANGE.format(
-            TABLE=rule_implementation["table"],
-            COLUMN=rule_implementation["column"],
+            TABLE=self.get_table_name(rule_implementation),
+            COLUMN=self.get_column_name(rule_implementation),
             MIN_VALUE=rule["type_params"]["min_value"],
             MAX_VALUE=rule["type_params"]["max_value"])
 
 
     def _query_min_value(self, rule_implementation, rule):
         return queries.QUERY_MIN_VALUE.format(
-            TABLE=rule_implementation["table"],
-            COLUMN=rule_implementation["column"],
+            TABLE=self.get_table_name(rule_implementation),
+            COLUMN=self.get_column_name(rule_implementation),
             MIN_VALUE=rule["type_params"]["min_value"])
 
 
     def _query_max_value(self, rule_implementation, rule):
         return queries.QUERY_MAX_VALUE.format(
-            TABLE=rule_implementation["table"],
-            COLUMN=rule_implementation["column"],
+            TABLE=self.get_table_name(rule_implementation),
+            COLUMN=self.get_column_name(rule_implementation),
             MAX_VALUE=rule["type_params"]["max_value"])
 
 
     def _query_dates_range(self, rule_implementation, rule):
         return queries.QUERY_DATES_RANGE.format(
-            TABLE=rule_implementation["table"],
-            COLUMN=rule_implementation["column"],
+            TABLE=self.get_table_name(rule_implementation),
+            COLUMN=self.get_column_name(rule_implementation),
             MIN_DATE=rule["type_params"]["min_date"],
             MAX_DATE=rule["type_params"]["max_date"])
 
 
     def _query_min_date(self, rule_implementation, rule):
         return queries.QUERY_MIN_VALUE.format(
-            TABLE=rule_implementation["table"],
-            COLUMN=rule_implementation["column"],
+            TABLE=self.get_table_name(rule_implementation),
+            COLUMN=self.get_column_name(rule_implementation),
             MIN_DATE=rule["type_params"]["min_date"])
 
 
     def _query_max_date(self, rule_implementation, rule):
         return queries.QUERY_MAX_VALUE.format(
-            TABLE=rule_implementation["table"],
-            COLUMN=rule_implementation["column"],
+            TABLE=self.get_table_name(rule_implementation),
+            COLUMN=self.get_column_name(rule_implementation),
             MAX_DATE=rule["type_params"]["max_date"])
 
 
     def _query_min_text(self, rule_implementation, rule):
         return queries.QUERY_MIN_TEXT.format(
-            TABLE=rule_implementation["table"],
-            COLUMN=rule_implementation["column"],
+            TABLE=self.get_table_name(rule_implementation),
+            COLUMN=self.get_column_name(rule_implementation),
             MIN_TEXT=rule["type_params"]["num_characters"])
 
 
     def _query_max_text(self, rule_implementation, rule):
         return queries.QUERY_MAX_TEXT.format(
-            TABLE=rule_implementation["table"],
-            COLUMN=rule_implementation["column"],
+            TABLE=self.get_table_name(rule_implementation),
+            COLUMN=self.get_column_name(rule_implementation),
             MAX_TEXT=rule["type_params"]["num_characters"])
 
 
     def _query_mandatory_field(self, rule_implementation, rule):
         return queries.QUERY_MANDATORY_FIELD.format(
-            TABLE=rule_implementation["table"],
-            COLUMN=rule_implementation["column"])
+            TABLE=self.get_table_name(rule_implementation),
+            COLUMN=self.get_column_name(rule_implementation))
 
 
     def _query_custom_validation(self, rule_implementation=None, rule=None):

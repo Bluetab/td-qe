@@ -29,7 +29,8 @@ class Engine(object):
     def parse_rule_implementations(data_raw):
         spec = [{"implementation_key": ("implementation_key"),
                 "system": ("system"),
-                "table":  lambda t: t['system_params']["table"] if t['system_params'].get("table", None) else OMIT,
+                "group":  lambda t: t['system_params']["group"]  if t['system_params'].get("group", None)  else OMIT,
+                "table":  lambda t: t['system_params']["table"]  if t['system_params'].get("table", None)  else OMIT,
                 "column": lambda t: t['system_params']["column"] if t['system_params'].get("column", None) else OMIT,
                 "rule": ("rule")}]
         return glom(data_raw, spec)

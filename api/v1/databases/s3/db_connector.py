@@ -41,6 +41,9 @@ class DbConnector(BaseConnector):
     def execute(self, query):
         return self.__start_query_execution(query)
 
+    def get_table_name(self, rule_implementation):
+        return "{GROUP}.{TABLE}".format(GROUP=rule_implementation["group"],
+                                        TABLE=rule_implementation["table"])
 
     def __start_query_execution(self, query):
 
