@@ -26,18 +26,25 @@ class BaseConnector:
 
         rule = rule_implementation["rule"]
         type = rule["rule_type"]["name"]
-        query_execute = switcher.get(type, type)(rule_implementation, rule)
+        function_to_call = switcher.get(type, None)
+        return self.__proccess_to_execute(function_to_call, rule_implementation, rule) if function_to_call else None
 
+
+    def __proccess_to_execute(self, function_to_call, rule_implementation, rule):
+        query_execute = function_to_call(rule_implementation, rule)
         self.connect()
         query_id = self.execute(query_execute)
         self.disconnect()
         return query_id
 
+
     def get_table_name(self, rule_implementation):
         return rule_implementation["table"]
 
+
     def get_column_name(self, rule_implementation):
         return rule_implementation["column"]
+
 
     def _query_integer_values_range(self, rule_implementation, rule):
         return queries.QUERY_INTEGER_VALUES_RANGE.format(

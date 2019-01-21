@@ -49,7 +49,8 @@ class Engine(object):
             if rule_implementation["system"] in connectors_object:
                 dbConnector = connectors_object[rule_implementation["system"]]
                 query_id = dbConnector.execute_by_type(rule_implementation)
-                queries_ids_info.append((rule_implementation["implementation_key"], query_id))
+                if query_id: 
+                    queries_ids_info.append((rule_implementation["implementation_key"], query_id))
 
         print("Query Results: " + str(len(queries_ids_info)))
 
