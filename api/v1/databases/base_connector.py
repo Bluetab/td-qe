@@ -111,7 +111,7 @@ class BaseConnector:
 
 
     def _query_custom_validation(self, rule_implementation=None, rule=None):
-        query_execute = CustomValidationsModel.find_by_rule_implementation_id(
+        query_execute = CustomValidationsModel.find_by_implementation_key(
             rule_implementation["implementation_key"]
             ).to_dict()["query_validation"]
         return query_execute
